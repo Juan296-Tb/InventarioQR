@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventario - Escanear y Generar QR</title>
+  <link rel="manifest" href="../json/manifest.json">
+<meta name="theme-color" content="#00dfc4">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/Scan.css" />
+
+  <!-- Librería para generar QR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+  <!-- 🔹 SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class="fa-solid fa-qrcode"></i>
+        <span>Inventario</span>
+      </div>
+      <nav class="menu-top">
+        <a class="menu-item active"><i class="fa-solid fa-qrcode"></i><span>Escanear / Generar</span></a>
+        <a class="menu-item"><i class="fa-regular fa-clock"></i><span>Historial</span></a>
+        <a class="menu-item"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- 🔹 MAIN -->
+  <main class="main">
+    <header class="topbar">
+      <h1 class="title">Escanear y Generar QR <span class="pill">Principal</span></h1>
+      <button class="help"><i class="fa-regular fa-circle-question"></i> Ayuda</button>
+    </header>
+
+    <section id="scanner" class="page active">
+      <div class="columns balanced">
+
+        <!-- 🔸 PANEL IZQUIERDO -->
+        <div class="panel">
+          <h3 class="panel-title"><i class="fa-solid fa-barcode"></i> Entrada de Escaneo</h3>
+
+          <label for="buscar" class="lbl">Buscar Caja</label>
+          <input id="buscar" type="text" placeholder="Ej. Caja A-12" class="input">
+
+          <label for="escanear" class="lbl">Escanear QR</label>
+          <input id="escanear" type="text" placeholder="Toca para abrir cámara o subir imagen" class="input">
+
+          <h4 class="lbl">Últimos escaneos</h4>
+          <div class="scans" id="listaEscaneos">
+            <!-- Se rellenan dinámicamente -->
+          </div>
+        </div>
+
+        <!-- 🔸 PANEL DERECHO -->
+        <div class="panel">
+          <h3 class="panel-title"><i class="fa-solid fa-box"></i> Generar Nueva Caja</h3>
+
+          <label for="nombreCaja" class="lbl">Nombre de la Caja</label>
+          <input type="text" id="nombreCaja" class="input" placeholder="Ej. Caja Principal A-12">
+
+          <label class="lbl">Contenido (múltiples)</label>
+          <div id="contenidos"></div>
+          <button type="button" id="agregarContenido" class="btn-add">
+            <i class="fa-solid fa-plus"></i> Agregar contenido
+          </button>
+
+          <label for="ubicacion" class="lbl">Ubicación</label>
+          <input type="text" id="ubicacion" class="input" placeholder="Ej. Pasillo 3, Estante B">
+
+          <div class="qr-preview">
+            <div id="qrPreview"></div>
+            <pre id="qrData" class="qr-data"></pre>
+          </div>
+
+          <button type="button" id="generarQR" class="btn-generate">
+            <i class="fa-solid fa-qrcode"></i> Generar QR
+          </button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Librerías primero -->
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Scripts funcionales -->
+  <script src="../script/Script.js"></script>
+  <script src="../script/Scanner.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("service-worker.js")
+      .then(() => console.log("✅ Service Worker registrado correctamente"))
+      .catch(err => console.log("❌ Error al registrar Service Worker:", err));
+  }
+</script>
+</body>
+</html>
