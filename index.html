@@ -1,0 +1,17 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0; URL=Scan.html">
+    <title>Redirigiendo...</title>
+  </head>
+  <body>
+    <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js')
+    .then(() => console.log('Service Worker registrado correctamente ✅'))
+    .catch((err) => console.error('Error al registrar el Service Worker 😢', err));
+}
+</script>
+  </body>
+</html>
