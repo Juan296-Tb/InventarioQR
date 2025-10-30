@@ -1,38 +1,50 @@
-const CACHE_NAME = "inventario-qr-cache-v1";
+// Nombre del caché (cámbialo para forzar actualización)
+const CACHE_NAME = "inventario-qr-v1";
+
+// Archivos que se guardarán en caché
 const urlsToCache = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./scan.css",      // si tienes CSS
-  "./Scanner.js",
-  "./Script.js",          // tu script principal
   "./icons/icon-192x192.png",
-  "./icons/icon-512x512.png"
+  "./icons/icon-512x512.png",
+  "./Scan.css", // si tienes estilos
+  "./Script.js", // tu JS principal
+  "./Scanner.js" // si usas un lector QR externo
 ];
 
-// Instalar y guardar archivos en caché
+// Instalación: cachea los archivos esenciales
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("Archivos cacheados correctamente");
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
-// Activar y limpiar cachés viejas
+// Activación: limpia cachés viejos
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) =>
       Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+        cacheNames.map((name) => {
+          if (name !== CACHE_NAME) {
+            console.log("Eliminando caché antiguo:", name);
+            return caches.delete(name);
+          }
+        })
       )
     )
   );
 });
 
-// Interceptar peticiones para usar caché
+// Intercepción de peticiones
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => response || fetch(event.request))
+    caches.match(event.request).then((response) => {
+      // Si el recurso está en caché, lo devuelve. Si no, lo descarga.
+      return response || fetch(event.request);
+    })
   );
 });
