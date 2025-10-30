@@ -3,117 +3,83 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Inventario - Escanear y Generar QR</title>
+  <title>Inventario QR Pro</title>
   <link rel="manifest" href="../json/manifest.json">
-<meta name="theme-color" content="#00dfc4">
-<link rel="manifest" href="../json/manifest.json">
+  <meta name="theme-color" content="#00dfc4">
 
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Iconos -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
   <!-- Estilos -->
   <link rel="stylesheet" href="../css/Scan.css" />
 
-  <!-- Librería para generar QR -->
+  <!-- Librerías externas -->
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
   <!-- 🔹 SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="logo">
-        <i class="fa-solid fa-qrcode"></i>
-        <span>Inventario</span>
-      </div>
-      <nav class="menu-top">
-        <a class="menu-item active"><i class="fa-solid fa-qrcode"></i><span>Escanear / Generar</span></a>
-        <a class="menu-item"><i class="fa-regular fa-clock"></i><span>Historial</span></a>
-        <a class="menu-item"><i class="fa-solid fa-gear"></i><span>Ajustes</span></a>
-      </nav>
+    <div class="logo">
+      <i class="fa-solid fa-boxes-stacked"></i>
+      <span>Inventario QR</span>
     </div>
+    <nav class="menu">
+      <a class="menu-item active"><i class="fa-solid fa-qrcode"></i><span>Escanear / Generar</span></a>
+    </nav>
   </aside>
 
-  <!-- 🔹 MAIN -->
+  <!-- 🔹 CONTENIDO PRINCIPAL -->
   <main class="main">
     <header class="topbar">
-      <h1 class="title">Escanear y Generar QR <span class="pill">Principal</span></h1>
+      <h1>Escanear y Generar QR</h1>
       <button class="help"><i class="fa-regular fa-circle-question"></i> Ayuda</button>
     </header>
 
-    <section id="scanner" class="page active">
-      <div class="columns balanced">
+    <section class="columns">
+      <!-- Panel Izquierdo -->
+      <div class="panel">
+        <h3><i class="fa-solid fa-barcode"></i> Escaneo / Historial</h3>
 
-        <!-- 🔸 PANEL IZQUIERDO -->
-        <div class="panel">
-          <h3 class="panel-title"><i class="fa-solid fa-barcode"></i> Entrada de Escaneo</h3>
+        <input id="buscar" type="text" placeholder="🔍 Buscar caja..." class="input">
+        <input id="escanear" type="text" placeholder="📷 Tocar para escanear o subir imagen" class="input">
 
-          <label for="buscar" class="lbl">Buscar Caja</label>
-          <input id="buscar" type="text" placeholder="Ej. Caja A-12" class="input">
+        <h4>📋 Últimos Escaneos</h4>
+        <div id="listaEscaneos" class="scans"></div>
+      </div>
 
-          <label for="escanear" class="lbl">Escanear QR</label>
-          <input id="escanear" type="text" placeholder="Toca para abrir cámara o subir imagen" class="input">
+      <!-- Panel Derecho -->
+      <div class="panel">
+        <h3><i class="fa-solid fa-plus"></i> Generar Nueva Caja</h3>
 
-          <h4 class="lbl">Últimos escaneos</h4>
-          <div class="scans" id="listaEscaneos">
-            <!-- Se rellenan dinámicamente -->
-          </div>
-        </div>
+        <label class="lbl">Nombre de Caja</label>
+        <input id="nombreCaja" class="input" type="text" placeholder="Ej. Caja Principal A-12">
 
-        <!-- 🔸 PANEL DERECHO -->
-        <div class="panel">
-          <h3 class="panel-title"><i class="fa-solid fa-box"></i> Generar Nueva Caja</h3>
+        <label class="lbl">Contenido</label>
+        <div id="contenidos"></div>
+        <button id="agregarContenido" class="btn-add"><i class="fa-solid fa-plus"></i> Agregar producto</button>
 
-          <label for="nombreCaja" class="lbl">Nombre de la Caja</label>
-          <input type="text" id="nombreCaja" class="input" placeholder="Ej. Caja Principal A-12">
+        <label class="lbl">Ubicación</label>
+        <input id="ubicacion" class="input" type="text" placeholder="Ej. Pasillo 3, Estante B">
 
-          <label class="lbl">Contenido (múltiples)</label>
-          <div id="contenidos"></div>
-          <button type="button" id="agregarContenido" class="btn-add">
-            <i class="fa-solid fa-plus"></i> Agregar contenido
-          </button>
-
-          <label for="ubicacion" class="lbl">Ubicación</label>
-          <input type="text" id="ubicacion" class="input" placeholder="Ej. Pasillo 3, Estante B">
-
-          <div class="qr-preview">
-            <div id="qrPreview"></div>
-            <pre id="qrData" class="qr-data"></pre>
-          </div>
-
-          <button type="button" id="generarQR" class="btn-generate">
-            <i class="fa-solid fa-qrcode"></i> Generar QR
-          </button>
-        </div>
-
+        <div class="qr-preview" id="qrPreview"></div>
+        <button id="generarQR" class="btn-generate"><i class="fa-solid fa-qrcode"></i> Generar QR</button>
+        <button id="downloadQR" class="btn-download"><i class="fa-solid fa-download"></i> Descargar QR</button>
       </div>
     </section>
-  </main>
-
-  <!-- Librerías primero -->
-  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
+</main>
   <!-- Scripts funcionales -->
   <script src="../script/Script.js"></script>
   <script src="../script/Scanner.js"></script>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker
-      .register("service-worker.js")
-      .then(() => console.log("✅ Service Worker registrado correctamente"))
-      .catch(err => console.log("❌ Error al registrar Service Worker:", err));
-  }
-</script>
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("./service-worker.js")
-        .then(() => console.log("✅ Service Worker registrado correctamente."))
-        .catch((err) => console.error("❌ Error al registrar SW:", err));
-    });
-  }
-</script>
+
+  <!-- PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('../script/service-worker.js')
+        .then(() => console.log('✅ Service Worker activo'))
+        .catch(err => console.log('❌ Error SW:', err));
+    }
+  </script>
 </body>
 </html>
